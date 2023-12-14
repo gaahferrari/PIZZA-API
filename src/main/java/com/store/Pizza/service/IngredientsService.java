@@ -6,6 +6,7 @@ import com.store.Pizza.mapper.IngredientsMapper;
 import com.store.Pizza.repository.IngredientsRepository;
 import com.store.Pizza.request.IngredientsRequest;
 import com.store.Pizza.responses.BaseBodyResponse;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,17 @@ public class IngredientsService {
             return IngredientsMapper.toResponse(ingredients);
         } else {
             throw new BadRequestException("Erro ao criar um novo ingrediente");
+        }
+    }
+
+    @Transactional
+    public void deleteIngredient(Long ingredientId) {
+        Ingredients ingredients = ingredientsRepository.findById(ingredientId).orElse(null);
+
+        if (ingredients != null) {
+            ingredientsRepository.delete(ingredients);
+        } else {
+            throw new BadRequestException("Erro ao deletar o ingrediente. Ele pode estar vinculado a uma pizza");
         }
     }
 }

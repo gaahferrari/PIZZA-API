@@ -2,7 +2,6 @@ package com.store.Pizza.service;
 
 import com.store.Pizza.DTO.OrderDTO;
 import com.store.Pizza.DTO.OrderPizzaDTO;
-import com.store.Pizza.DTO.PizzaDTO;
 import com.store.Pizza.entity.Customer;
 import com.store.Pizza.entity.Order;
 import com.store.Pizza.entity.Pizza;
@@ -37,13 +36,15 @@ public class OrderService {
         return OrderMapper.toListResponse(orders);
     }
 
-   // public void deleteOrderWithoutRemovingAssociatedEntities(Long orderId) {
-     //   Order order = orderRepository.findById(orderId)
-       //         .orElseThrow(() -> new EntityNotFoundException("Pedido não encontrado: " + orderId));
-        //order.removeAllPizzas();
-
-        //orderRepository.delete(order);
-    //}
+    public void deleteOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElse(null);
+        if (order != null) {
+            order.removeOrder();
+            orderRepository.delete(order);
+        } else {
+            throw new BadRequestException("Erro ao deletar pedido");
+        }
+    }
 
 
     @Transactional

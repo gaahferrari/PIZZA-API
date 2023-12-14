@@ -31,4 +31,10 @@ public class PizzaController {
     public ResponseEntity<BaseBodyResponse<PizzaIngredientsDTO>> addPizzaToOrder(@PathVariable Long pizzaId, @PathVariable Long ingredientId) {
         return ResponseEntity.status(201).body(pizzaService.addIngredientsToPizza(pizzaId, ingredientId));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        pizzaService.deletePizza(id);
+        return ResponseEntity.status(200).body("O cliente com o ID: " + id + " foi excluído com sucesso!");
+    }
 }

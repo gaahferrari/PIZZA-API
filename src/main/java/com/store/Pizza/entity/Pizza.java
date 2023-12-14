@@ -35,7 +35,7 @@ public class Pizza {
     )
     private Set<Order> orders = new HashSet<>();
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @JoinTable(
             name = "pizza_ingredients",
             joinColumns = @JoinColumn(name = "pizza_fk"),
@@ -49,4 +49,11 @@ public class Pizza {
         ingredient.getPizza().add(this);
     }
 
+    public void removePizza() {
+        for (Ingredients ingredient : new HashSet<>(this.ingredients)) {
+            this.ingredients.remove(ingredient);
+            ingredient.getPizza().remove(this);
+        }
+
+    }
 }

@@ -40,9 +40,17 @@ public class Order {
         pizzas.getOrders().add(this);
     }
 
-   // public void removeAllPizzas() {
-     //   this.pizza.clear();
-    //}
+    public void removeOrder() {
+        for (Pizza pizza : new HashSet<>(this.pizza)) {
+            pizza.getOrders().remove(this);
+            this.pizza.remove(pizza);
+        }
+
+        if (this.customer != null) {
+            this.customer.getOrders().remove(this);
+            this.customer = null;
+        }
+    }
 
 
 }

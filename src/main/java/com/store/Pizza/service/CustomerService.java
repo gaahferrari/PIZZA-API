@@ -38,8 +38,6 @@ public class CustomerService {
         }
     }
 
-
-
     public BaseBodyResponse<CustomerOrdersDTO> getByOrder(Long customerId) {
         Optional<Customer> customerOptional = customerRepository.findById(customerId);
         if(customerOptional.isEmpty()){
@@ -48,6 +46,18 @@ public class CustomerService {
             Customer customer = customerOptional.get();
             List<Order> orders = customer.getOrders();
             return CustomerMapper.toResponseID(customer, orders);
-        }}
+        }
+    }
+
+    public void deleteCustomerAndWallet(Long userId) {
+        Customer customer = customerRepository.findById(userId).orElse(null);
+        if (customer != null) {
+            customerRepository.delete(customer);
+        } else {
+            throw new BadRequestException("Erro ao deletar o usuário");
+        }
+
+
+    }
 
 }

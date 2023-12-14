@@ -29,6 +29,12 @@ public class CustomerController {
         return ResponseEntity.status(200).body(customerService.getByOrder(id));
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        customerService.deleteCustomerAndWallet(id);
+        return ResponseEntity.status(200).body("O cliente com o ID: " + id + " foi excluído com sucesso!");
+    }
+
 
     @PostMapping
     public ResponseEntity<BaseBodyResponse<Customer>> createCustomer(@RequestBody CustomerRequest request) {

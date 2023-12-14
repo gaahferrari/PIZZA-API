@@ -59,4 +59,16 @@ public class PizzaService {
             Pizza pizzas = pizzaRepository.save(pizza);
             return PizzaMapper.toResponseIngredients(pizzas);
     }
+
+    @Transactional
+    public void deletePizza(Long pizzaId) {
+        Pizza pizza = pizzaRepository.findById(pizzaId).orElse(null);
+        if (pizza != null) {
+            pizza.removePizza();
+            pizzaRepository.delete(pizza);
+        } else {
+            throw new BadRequestException("Erro ao deletar sua pizza");
+        }
+
+    }
 }

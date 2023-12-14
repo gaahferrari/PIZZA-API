@@ -27,6 +27,10 @@ public class IngredientsController {
     public ResponseEntity<BaseBodyResponse<Ingredients>> createIngredients(@RequestBody IngredientsRequest request) {
         return ResponseEntity.status(201).body(ingredientsService.create(request));
     }
-
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        ingredientsService.deleteIngredient(id);
+        return ResponseEntity.status(200).body("O ingrediente foi excluído com sucesso!");
+    }
 
 }

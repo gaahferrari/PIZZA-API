@@ -3,6 +3,7 @@ package com.store.Pizza.service;
 
 import com.store.Pizza.DTO.WalletDTO;
 import com.store.Pizza.entity.Customer;
+import com.store.Pizza.entity.Order;
 import com.store.Pizza.entity.Wallet;
 import com.store.Pizza.mapper.WalletMapper;
 import com.store.Pizza.repository.CustomerRepository;
@@ -25,23 +26,26 @@ public class WalletService {
 
     private final CustomerRepository customerRepository;
 
-    public BaseBodyResponse<List<WalletDTO>> getAll(){
-        return WalletMapper.toListResponse(walletRepository.findAll());
+    public BaseBodyResponse<List<WalletDTO>> getAll() {
+        List<Wallet> wallets = walletRepository.findAll();
+        if(wallets.isEmpty()){
+            throw new BadRequestException("A lista de carteiras está vazia");
+        }
+        return WalletMapper.toListResponse(wallets);
     };
 
     @Transactional
-    public BaseBodyResponse<WalletDTO> create(WalletRequest request) throws BadRequestException {
+    public BaseBodyResponse<WalletDTO> create(WalletRequest request) {
         Optional<Customer> customer = customerRepository.findById(request.getCustomerId());
         if(customer.isEmpty()){
             throw new BadRequestException("Usuário com o id " + request.getCustomerId() + " não existe");
         }
-
         Wallet newWallet = walletRepository.save(WalletMapper.toWallet(request));
         if (customer.isPresent()) {
             newWallet.addCustomer(customer.get());
         }
-
-
         return WalletMapper.toResponse(newWallet);
     }
+
+
 }

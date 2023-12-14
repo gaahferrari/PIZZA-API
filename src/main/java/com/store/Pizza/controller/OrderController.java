@@ -28,11 +28,11 @@ public class OrderController {
     }
 
 
-  //  @DeleteMapping("/{id}")
-    //public ResponseEntity<String> delete(@PathVariable Long id) {
-      //  orderService.deleteOrderWithoutRemovingAssociatedEntities(id);
-        //return ResponseEntity.ok("O pedido com o ID: " + id + " foi excluído com sucesso!");
-    //}
+   @DeleteMapping("/{id}")
+    public ResponseEntity<String> delete(@PathVariable Long id) {
+        orderService.deleteOrder(id);
+       return ResponseEntity.status(200).body("O pedido com o ID: " + id + " foi excluído com sucesso!");
+    }
 
 
     @PutMapping("/{orderId}/pizza/{pizzaId}")
