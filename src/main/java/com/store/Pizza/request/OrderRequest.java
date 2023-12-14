@@ -13,7 +13,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderRequest {
-  //  private Long id;
+
     private Double orderTotalPrice;
     private Long customerId;
     private String customerName;

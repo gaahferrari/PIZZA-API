@@ -4,8 +4,10 @@ import com.store.Pizza.DTO.CustomerDTO;
 import com.store.Pizza.DTO.CustomerOrdersDTO;
 import com.store.Pizza.entity.Customer;
 import com.store.Pizza.request.CustomerRequest;
+import com.store.Pizza.responses.BaseBodyResponse;
 import com.store.Pizza.service.CustomerService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,18 +20,18 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping
-    public List<CustomerDTO> getAllCustomers() {
-        return customerService.getAll();
+    public ResponseEntity<BaseBodyResponse<List<CustomerDTO>>> getAllCustomers() {
+        return ResponseEntity.status(200).body(customerService.getAll()) ;
     }
 
     @GetMapping("/{id}")
-    public CustomerOrdersDTO getOrdersById(@PathVariable Long id) {
-        return customerService.getByOrder(id);
+    public ResponseEntity<BaseBodyResponse<CustomerOrdersDTO>> getOrdersById(@PathVariable Long id) {
+        return ResponseEntity.status(200).body(customerService.getByOrder(id));
     }
 
 
     @PostMapping
-    public Customer createCustomer(@RequestBody CustomerRequest request) {
-        return customerService.create(request);
+    public ResponseEntity<BaseBodyResponse<Customer>> createCustomer(@RequestBody CustomerRequest request) {
+        return ResponseEntity.status(201).body(customerService.create(request));
     }
 }

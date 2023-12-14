@@ -1,14 +1,11 @@
 package com.store.Pizza.mapper;
 
 import com.store.Pizza.DTO.IngredientsDTO;
-import com.store.Pizza.DTO.PizzaDTO;
-import com.store.Pizza.DTO.PizzaIngredientsDTO;
 import com.store.Pizza.entity.Ingredients;
-import com.store.Pizza.entity.Pizza;
 import com.store.Pizza.request.IngredientsRequest;
-import com.store.Pizza.request.PizzaRequest;
+import com.store.Pizza.responses.BaseBodyResponse;
 
-import java.util.stream.Collectors;
+import java.util.List;
 
 public class IngredientsMapper {
 
@@ -26,4 +23,18 @@ public class IngredientsMapper {
     }
 
 
+    public static BaseBodyResponse<Ingredients> toResponse(Ingredients ingredients){
+        return BaseBodyResponse.<Ingredients>builder()
+                .company("Pizza Store")
+                .description("Ingrediente " + ingredients.getName() + " foi criado com sucesso!")
+                .result(ingredients).build();
+    }
+
+    public static BaseBodyResponse<List<Ingredients>> toListResponse(List<Ingredients> Ingredients){
+        return BaseBodyResponse.<List<Ingredients>>builder()
+                .company("Pizza Store")
+                .description("Lista de ingredientes")
+                .result(Ingredients)
+                .build();
+    }
 }

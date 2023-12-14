@@ -17,7 +17,7 @@ public class CustomerRequest {
 
     private String userName;
 
-    private String userAdress;
+    private String userAddress;
 
     private List<Long> ordersListId;
 

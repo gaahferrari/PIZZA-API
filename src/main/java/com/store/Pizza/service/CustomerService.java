@@ -4,36 +4,50 @@ import com.store.Pizza.DTO.CustomerDTO;
 import com.store.Pizza.DTO.CustomerOrdersDTO;
 import com.store.Pizza.entity.Customer;
 import com.store.Pizza.entity.Order;
+import com.store.Pizza.exceptions.BadRequestException;
+import com.store.Pizza.exceptions.NotFoundException;
 import com.store.Pizza.mapper.CustomerMapper;
 import com.store.Pizza.repository.CustomerRepository;
 import com.store.Pizza.request.CustomerRequest;
+import com.store.Pizza.responses.BaseBodyResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
-
+import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class CustomerService {
     private final CustomerRepository customerRepository;
 
 
-    public List<CustomerDTO> getAll() {
-        return customerRepository.findAll().stream().map(c -> CustomerMapper.toDTO(c)).collect(Collectors.toList());
+    public BaseBodyResponse<List<CustomerDTO>> getAll() {
+        List<Customer> customers = customerRepository.findAll();
+        if (customers.isEmpty()) {
+            throw new BadRequestException("A lista de usuários está vazia");
+        }
+        return CustomerMapper.toListResponse(customers);
     }
 
-    public Customer create(CustomerRequest request) {
-
-        return customerRepository.save(CustomerMapper.toCustomer(request));
+    public BaseBodyResponse<Customer> create(CustomerRequest request) {
+        Customer customer = customerRepository.save(CustomerMapper.toCustomer(request));
+        if (customer != null){
+            return CustomerMapper.toResponse(customer);
+        } else {
+            throw new BadRequestException("Erro ao cadastrar o usuário");
+        }
     }
 
-    public CustomerOrdersDTO getByOrder(Long customerId) {
-        Customer customer = customerRepository.findById(customerId).orElse(null);
 
+
+    public BaseBodyResponse<CustomerOrdersDTO> getByOrder(Long customerId) {
+        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        if(customerOptional.isEmpty()){
+            throw new NotFoundException("Usuário com o id: " + customerId + " não foi encontrado");
+        } else {
+            Customer customer = customerOptional.get();
             List<Order> orders = customer.getOrders();
-            return CustomerMapper.toOrdersDTO(customer, orders);
-
-    }
+            return CustomerMapper.toResponseID(customer, orders);
+        }}
 
 }

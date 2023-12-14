@@ -2,12 +2,11 @@ package com.store.Pizza.mapper;
 
 import com.store.Pizza.DTO.OrderDTO;
 import com.store.Pizza.DTO.OrderPizzaDTO;
-import com.store.Pizza.DTO.PizzaDTO;
 import com.store.Pizza.entity.Order;
-import com.store.Pizza.entity.Pizza;
 import com.store.Pizza.request.OrderRequest;
+import com.store.Pizza.responses.BaseBodyResponse;
 
-import java.util.Set;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class OrderMapper {
@@ -40,7 +39,28 @@ public class OrderMapper {
     }
 
 
+    public static BaseBodyResponse<OrderDTO> toResponse(Order order){
+        return BaseBodyResponse.<OrderDTO>builder()
+                .company("Pizza Store")
+                .description("Pedido criado com sucesso!")
+                .result(toDTO(order)).build();
+    }
 
+    public static BaseBodyResponse<OrderPizzaDTO> toResponsePizza(Order order){
+        return BaseBodyResponse.<OrderPizzaDTO>builder()
+                .company("Pizza Store")
+                .description("Uma nova pizza foi adicionada ao pedido")
+                .result(toPizzaDTO(order)).build();
+    }
+
+    public static BaseBodyResponse<List<OrderPizzaDTO>> toListResponse(List<Order> orders){
+        List<OrderPizzaDTO> orderPizzaDTOS = orders.stream().map(OrderMapper::toPizzaDTO).toList();
+        return BaseBodyResponse.<List<OrderPizzaDTO>>builder()
+                .company("Pizza Store")
+                .description("Lista de pedidos")
+                .result(orderPizzaDTOS)
+                .build();
+    }
 
 
 
