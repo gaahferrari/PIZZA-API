@@ -10,6 +10,7 @@ import com.store.Pizza.mapper.CustomerMapper;
 import com.store.Pizza.repository.CustomerRepository;
 import com.store.Pizza.request.CustomerRequest;
 import com.store.Pizza.responses.BaseBodyResponse;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class CustomerService {
         } else {
             throw new BadRequestException("Erro ao cadastrar o usuário");
         }
+
     }
 
     public BaseBodyResponse<CustomerOrdersDTO> getByOrder(Long customerId) {
