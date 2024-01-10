@@ -14,6 +14,7 @@ import com.store.Pizza.repository.PizzaRepository;
 import com.store.Pizza.request.OrderRequest;
 import com.store.Pizza.responses.BaseBodyResponse;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -48,7 +49,7 @@ public class OrderService {
 
 
     @Transactional
-    public BaseBodyResponse<OrderDTO> create(OrderRequest request) {
+    public BaseBodyResponse<OrderDTO> create(@Valid OrderRequest request) {
         Optional<Customer> customer = customerRepository.findById(request.getCustomerId());
 
         if(customer.isEmpty()){

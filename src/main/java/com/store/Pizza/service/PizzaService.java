@@ -12,6 +12,7 @@ import com.store.Pizza.repository.PizzaRepository;
 import com.store.Pizza.request.PizzaRequest;
 import com.store.Pizza.responses.BaseBodyResponse;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 
 import org.springframework.stereotype.Service;
@@ -34,7 +35,7 @@ public class PizzaService {
         return PizzaMapper.toListResponse(pizzaList);
     }
 
-    public BaseBodyResponse<Pizza> create(PizzaRequest request) {
+    public BaseBodyResponse<Pizza> create(@Valid PizzaRequest request) {
         Pizza pizza = pizzaRepository.save(PizzaMapper.toPizza(request));
         if(pizza != null){
             return PizzaMapper.toResponse(pizza);

@@ -20,13 +20,15 @@ import java.util.List;
 @NoArgsConstructor
 public class CustomerRequest {
 
-    @Size(min = 6, max = 70)
-    @NotBlank
+    @Size(min = 6, max = 70, message = "O nome deve ter entre 6 e 70 caracteres")
+    @NotBlank(message = "O nome não pode estar em branco")
+    @NotNull(message = "O nome não pode ser nulo")
     @Schema(description = "Nome completo do usuário", example = "José dos Santos")
     private String userName;
 
-    @Size(min = 4, max = 100)
-    @NotBlank
+    @Size(min = 4, max = 100, message = "O endereço deve ter entre 4 e 100 caracteres")
+    @NotBlank(message = "O endereço não pode estar em branco")
+    @NotNull(message = "O engereço não pode ser nulo")
     @Schema(description = "Endereço do usuário", example = "Rua das Flores, 123")
     private String userAddress;
 

@@ -30,7 +30,7 @@ public class CustomerService {
         return CustomerMapper.toListResponse(customers);
     }
 
-    public BaseBodyResponse<Customer> create(CustomerRequest request) {
+    public BaseBodyResponse<Customer> create(@Valid CustomerRequest request) {
         Customer customer = customerRepository.save(CustomerMapper.toCustomer(request));
         if (customer != null){
             return CustomerMapper.toResponse(customer);

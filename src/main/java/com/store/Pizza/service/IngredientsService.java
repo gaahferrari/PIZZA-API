@@ -7,6 +7,7 @@ import com.store.Pizza.repository.IngredientsRepository;
 import com.store.Pizza.request.IngredientsRequest;
 import com.store.Pizza.responses.BaseBodyResponse;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +27,7 @@ public class IngredientsService {
         return IngredientsMapper.toListResponse(ingredients);
     }
 
-    public BaseBodyResponse<Ingredients> create(IngredientsRequest request) {
+    public BaseBodyResponse<Ingredients> create(@Valid IngredientsRequest request) {
       Ingredients ingredients = ingredientsRepository.save(IngredientsMapper.toIngredients(request));
         if (ingredients != null){
             return IngredientsMapper.toResponse(ingredients);
