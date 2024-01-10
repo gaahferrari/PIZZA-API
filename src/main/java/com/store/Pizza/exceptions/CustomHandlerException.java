@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
@@ -43,14 +44,23 @@ public class CustomHandlerException {
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleInvalidArgument(MethodArgumentNotValidException exception) {
+    public ResponseEntity<Object> handleInvalidArgument(MethodArgumentNotValidException exception) {
         Map<String, String> errorMap = new HashMap<>();
         exception.getBindingResult().getFieldErrors().forEach(error -> {
             errorMap.put(error.getField(), error.getDefaultMessage());
         });
-        return errorMap;
-    }
 
+        String errorMessage = errorMap.values().stream()
+                .collect(Collectors.joining(", "));
+
+        BaseBodyError error = BaseBodyError.builder()
+                .error(HttpStatus.BAD_REQUEST.name())
+                .code("400")
+                .message(errorMessage)
+                .build();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
 
 
 }

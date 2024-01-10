@@ -26,7 +26,6 @@ public class OrderRequest {
     @Schema(description = "ID do cliente", example = "12345")
     private Long customerId;
 
-
     @Size(min = 4, max = 70, message = "O nome do usuário dve conter entre 4 e 70 caracteres")
     @Schema(description = "Nome do cliente", example = "João da Silva")
     private String customerName;
@@ -34,6 +33,6 @@ public class OrderRequest {
     @Size(min = 1, max = 20, message = "A lista de pizzas deve conter entre 1 e 20 elementos")
     @Valid
     @Schema(description = "Lista de IDs das pizzas", example = "[1, 2, 3]")
-   private Set<PizzaDTO> pizzasListIds;
+    private Set<PizzaDTO> pizzasListIds;
 
 }
