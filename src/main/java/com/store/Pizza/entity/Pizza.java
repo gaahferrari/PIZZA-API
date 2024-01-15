@@ -44,12 +44,22 @@ public class Pizza {
     private Set<Ingredients> ingredients = new HashSet<>();
 
 
-    public void addIngredient(Ingredients ingredient){
+    public void addIngredient(Ingredients ingredient) {
+
+        if (ingredient.getName().isBlank()) {
+            throw new IllegalArgumentException("O nome do ingrediente não pode estar em branco");
+        }
         ingredients.add(ingredient);
         ingredient.getPizza().add(this);
+
     }
 
+
+
     public void removePizza() {
+        if (this.ingredients.isEmpty()) {
+            throw new IllegalStateException("A lista de ingredientes está vazia");
+        }
         for (Ingredients ingredient : new HashSet<>(this.ingredients)) {
             this.ingredients.remove(ingredient);
             ingredient.getPizza().remove(this);

@@ -25,4 +25,5 @@ public class Ingredients {
     @ManyToMany(mappedBy = "ingredients")
     private Set<Pizza> pizza = new HashSet<>();
 
+
 }

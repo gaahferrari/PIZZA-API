@@ -23,6 +23,9 @@ public class Wallet {
     private Customer customer;
 
     public void addCustomer(Customer customer){
+        if(customer.getUserName().isBlank()){
+            throw new IllegalArgumentException("O nome não pode estar em branco");
+        }
         setCustomer(customer);
         customer.setWallet(this);
     }
