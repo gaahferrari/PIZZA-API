@@ -1,7 +1,5 @@
 package com.store.Pizza.services;
 
-import com.store.Pizza.DTO.CustomerDTO;
-import com.store.Pizza.DTO.CustomerOrdersDTO;
 import com.store.Pizza.entity.Customer;
 import com.store.Pizza.entity.Order;
 import com.store.Pizza.exceptions.BadRequestException;
@@ -9,7 +7,6 @@ import com.store.Pizza.exceptions.NotFoundException;
 import com.store.Pizza.mapper.CustomerMapper;
 import com.store.Pizza.repository.CustomerRepository;
 import com.store.Pizza.request.CustomerRequest;
-import com.store.Pizza.responses.BaseBodyResponse;
 import com.store.Pizza.service.CustomerService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

@@ -1,15 +1,12 @@
 package com.store.Pizza.services;
 
-import com.store.Pizza.entity.Customer;
 import com.store.Pizza.entity.Ingredients;
 import com.store.Pizza.entity.Pizza;
 import com.store.Pizza.exceptions.BadRequestException;
 import com.store.Pizza.exceptions.NotFoundException;
-import com.store.Pizza.mapper.CustomerMapper;
 import com.store.Pizza.mapper.PizzaMapper;
 import com.store.Pizza.repository.IngredientsRepository;
 import com.store.Pizza.repository.PizzaRepository;
-import com.store.Pizza.request.CustomerRequest;
 import com.store.Pizza.request.PizzaRequest;
 import com.store.Pizza.service.PizzaService;
 import org.junit.jupiter.api.Test;
