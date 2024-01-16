@@ -6,7 +6,6 @@ import com.store.Pizza.exceptions.BadRequestException;
 import com.store.Pizza.mapper.WalletMapper;
 import com.store.Pizza.repository.CustomerRepository;
 import com.store.Pizza.repository.WalletRepository;
-import com.store.Pizza.request.CustomerRequest;
 import com.store.Pizza.request.WalletRequest;
 import com.store.Pizza.service.WalletService;
 import org.junit.jupiter.api.Test;
@@ -17,6 +16,8 @@ import org.mockito.MockedStatic;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -77,6 +78,39 @@ public class WalletServiceTest {
             assertEquals(expectedError, actualError.getMessage());
 
     }
+
+    @Test
+    public void shouldReturnAllWallets_whenListIsNotEmpty() {
+        try (MockedStatic<WalletMapper> walletMapper = mockStatic(WalletMapper.class)) {
+            // Arrange
+            Wallet wallet = mock(Wallet.class);
+            List<Wallet> wallets = Collections.singletonList(wallet);
+
+
+            when(walletRepository.findAll()).thenReturn(wallets);
+            walletMapper.when(() -> WalletMapper.toWallet(any(WalletRequest.class))).thenReturn(wallet);
+
+            // Act
+            walletService.getAll();
+
+            // Assert
+            // verify(customerRepository, times(1)).findAll();
+            verify(walletRepository).findAll();
+        }
+    }
+
+    @Test
+    public void shouldReturnAllWallets_whenListIsEmpty() {
+
+        //Arrange
+        when(walletRepository.findAll()).thenReturn(Collections.emptyList());
+        String expectedError = "A lista de carteiras está vazia";
+        //Act
+        BadRequestException actualError = assertThrows(BadRequestException.class, () -> walletService.getAll());
+        //Assert
+        assertEquals(expectedError, actualError.getMessage());
+    }
+
 
 
 }

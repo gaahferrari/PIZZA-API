@@ -1,20 +1,16 @@
 package com.store.Pizza.services;
 
-import com.store.Pizza.entity.Customer;
-import com.store.Pizza.entity.Order;
-import com.store.Pizza.entity.Wallet;
+import com.store.Pizza.entity.*;
 import com.store.Pizza.exceptions.BadRequestException;
+import com.store.Pizza.exceptions.NotFoundException;
 import com.store.Pizza.mapper.OrderMapper;
-import com.store.Pizza.mapper.WalletMapper;
+import com.store.Pizza.mapper.PizzaMapper;
 import com.store.Pizza.repository.CustomerRepository;
-import com.store.Pizza.repository.IngredientsRepository;
 import com.store.Pizza.repository.OrderRepository;
 import com.store.Pizza.repository.PizzaRepository;
 import com.store.Pizza.request.OrderRequest;
-import com.store.Pizza.request.WalletRequest;
+import com.store.Pizza.request.PizzaRequest;
 import com.store.Pizza.service.OrderService;
-import com.store.Pizza.service.PizzaService;
-import org.aspectj.weaver.ast.Or;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -23,6 +19,8 @@ import org.mockito.MockedStatic;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -90,6 +88,118 @@ public class OrderServiceTest {
         assertEquals(expectedError, actualError.getMessage());
 
     }
+
+    @Test
+    public void shouldAddPizzaToOrder_whenRequestIsValid() {
+        try (MockedStatic<OrderMapper> orderMapper = mockStatic(OrderMapper.class)) {
+            //Arrange
+            Pizza pizza = mock(Pizza.class);
+
+            Order order = mock(Order.class);
+
+            when(pizzaRepository.findById(anyLong())).thenReturn(Optional.of(pizza));
+            when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
+            orderMapper.when(() -> OrderMapper.toOrder(any(OrderRequest.class))).thenReturn(order);
+
+            //Act
+            orderService.addPizzaToOrder(order.getId(), pizza.getId());
+
+            //Assert
+            verify(orderRepository).save(order);
+            verify(order).addPizza(pizza);
+        }
+    }
+
+    @Test
+    public void shouldAddIngredientToPizza_whenRequestIsNotValid(){
+
+        //Arrange
+
+        Order order = mock(Order.class);
+
+        Pizza pizza = mock(Pizza.class);
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.empty());
+        when(pizzaRepository.findById(anyLong())).thenReturn(Optional.empty());
+
+        String expectedError = "Pizza ou pedido não foi encontrado";
+        //Act
+        NotFoundException actualError = assertThrows(NotFoundException.class, () -> orderService.addPizzaToOrder(order.getId(), pizza.getId()));
+
+        //Assert
+        assertEquals(expectedError, actualError.getMessage());
+
+
+    }
+
+    @Test
+    public void shouldDeleteOrder_whenRequestIsValid(){
+
+        //Arrange
+        Order order = mock(Order.class);
+
+        when(orderRepository.findById(anyLong())).thenReturn(Optional.of(order));
+
+        //Act
+        orderService.deleteOrder(order.getId());
+
+
+        //Assert
+        verify(order).removeOrder();
+        verify(orderRepository).delete(order);
+
+    }
+
+    @Test
+    public void shouldDeleteOrder_whenRequestIsNotValid(){
+
+        //Arrange
+        Order order = mock(Order.class);
+
+
+        when(orderRepository.findById(any())).thenReturn(Optional.empty());
+        String expectedError = "Erro ao deletar pedido";
+        //Act
+        BadRequestException actualError = assertThrows(BadRequestException.class, () -> orderService.deleteOrder(order.getId()));
+
+        //Assert
+        assertEquals(expectedError, actualError.getMessage());
+
+    }
+
+    @Test
+    public void shouldReturnAllOrders_whenListIsNotEmpty() {
+        try (MockedStatic<OrderMapper> orderMapper = mockStatic(OrderMapper.class)) {
+            // Arrange
+            Order order = mock(Order.class);
+            List<Order> orders = Collections.singletonList(order);
+
+
+            when(orderRepository.findAll()).thenReturn(orders);
+            orderMapper.when(() -> OrderMapper.toOrder(any(OrderRequest.class))).thenReturn(order);
+
+            // Act
+            orderService.getAll();
+
+            // Assert
+            // verify(customerRepository, times(1)).findAll();
+            verify(orderRepository).findAll();
+        }
+    }
+
+    @Test
+    public void shouldReturnAllOrders_whenListIsEmpty() {
+
+        //Arrange
+        when(orderRepository.findAll()).thenReturn(Collections.emptyList());
+        String expectedError = "A lista de pedidos está vazia";
+        //Act
+        BadRequestException actualError = assertThrows(BadRequestException.class, () -> orderService.getAll());
+
+        //Assert
+        assertEquals(expectedError, actualError.getMessage());
+    }
+
 }
 
 

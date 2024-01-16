@@ -19,6 +19,10 @@ import org.mockito.MockedStatic;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -71,5 +75,71 @@ public class IngredientsServiceTest {
 
 
     }
+
+    @Test
+    public void shouldDeleteIngredient_whenRequestIsValid(){
+
+        //Arrange
+        Ingredients ingredients = mock(Ingredients.class);
+
+        when(ingredientsRepository.findById(anyLong())).thenReturn(Optional.of(ingredients));
+
+        //Act
+        ingredientsService.deleteIngredient(ingredients.getId());
+
+        //Assert
+        verify(ingredientsRepository).delete(ingredients);
+
+    }
+
+    @Test
+    public void shouldDeleteIngredient_whenRequestIsNotValid(){
+
+        //Arrange
+        Ingredients ingredients = mock(Ingredients.class);
+
+        when(ingredientsRepository.findById(any())).thenReturn(Optional.empty());
+        String expectedError = "Erro ao deletar o ingrediente. Ele pode estar vinculado a uma pizza";
+        //Act
+        BadRequestException actualError = assertThrows(BadRequestException.class, () -> ingredientsService.deleteIngredient(ingredients.getId()));
+
+        //Assert
+        assertEquals(expectedError, actualError.getMessage());
+
+    }
+
+    @Test
+    public void shouldReturnAllIngredients_whenListIsNotEmpty() {
+        try (MockedStatic<IngredientsMapper> ingredientsMapper = mockStatic(IngredientsMapper.class)) {
+            // Arrange
+            Ingredients ingredient = mock(Ingredients.class);
+            List<Ingredients> ingredients = Collections.singletonList(ingredient);
+
+
+            when(ingredientsRepository.findAll()).thenReturn(ingredients);
+            ingredientsMapper.when(() -> IngredientsMapper.toIngredients(any(IngredientsRequest.class))).thenReturn(ingredient);
+
+            // Act
+            ingredientsService.getAll();
+
+            // Assert
+            // verify(customerRepository, times(1)).findAll();
+            verify(ingredientsRepository).findAll();
+        }
+    }
+
+    @Test
+    public void shouldReturnAllIngredients_whenListIsEmpty() {
+
+        //Arrange
+        when(ingredientsRepository.findAll()).thenReturn(Collections.emptyList());
+        String expectedError = "A lista de ingredientes está vazia";
+        //Act
+        BadRequestException actualError = assertThrows(BadRequestException.class, () -> ingredientsService.getAll());
+
+        //Assert
+        assertEquals(expectedError, actualError.getMessage());
+    }
+
 
 }
